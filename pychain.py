@@ -175,17 +175,20 @@ amount = st.number_input("Amount")
 # Add a block to the blockchain.
 if st.button("Add Block"):
     if sender != '' and receiver != '':
-        prev_block = pychain.chain[-1]
-        prev_block_hash = prev_block.hash_block()
+        if amount != 0.0:
+            prev_block = pychain.chain[-1]
+            prev_block_hash = prev_block.hash_block()
 
-        new_block = Block(
-            record=Record(sender=sender, receiver=receiver, amount=amount),
-            creator_id=42,
-            prev_hash=prev_block_hash
-        )
+            new_block = Block(
+                record=Record(sender=sender, receiver=receiver, amount=amount),
+                creator_id=42,
+                prev_hash=prev_block_hash
+            )
 
-        pychain.add_block(new_block)
-        st.balloons()
+            pychain.add_block(new_block)
+            st.balloons()
+        else:
+            st.error("Transaction amount must be nonzero")
     else:
         st.error("Sender and Receiver must not be empty")
 
