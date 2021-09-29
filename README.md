@@ -4,7 +4,7 @@ This repo contains an implementation of a blockchain-based ledger system called 
 * add transaction blocks to the blockchain
 * validate the entire blockchain
 * modify the proof-of-work difficulty on a scale of 1 to 5
-* inspect individual blocks in detail (view the entire record).
+* inspect individual blocks in detail.
 
 ---
 
