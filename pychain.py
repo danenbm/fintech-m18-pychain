@@ -43,13 +43,15 @@ import hashlib
 # 3. Add an attribute named `sender` of type `str`.
 # 4. Add an attribute named `receiver` of type `str`.
 # 5. Add an attribute named `amount` of type `float`.
-# Note that you’ll use this new `Record` class as the data type of your `record` attribute in the next section.
+# Note that you’ll use this new `Record` class as the data type of your `record`
+# attribute in the next section.
 
-
-# @TODO
-# Create a Record Data Class that consists of the `sender`, `receiver`, and
-# `amount` attributes
-# YOUR CODE HERE
+# Class to store records of numerical transactions used in the PyChain blockchain.
+@dataclass
+class Record:
+    sender: str
+    receiver: str
+    amount: float
 
 
 ################################################################################
@@ -63,13 +65,10 @@ import hashlib
 # 2. Set the data type of the `record` attribute to `Record`.
 
 
+# Class for an individual block in the PyChain blockchain.
 @dataclass
 class Block:
-
-    # @TODO
-    # Rename the `data` attribute to `record`, and set the data type to `Record`
-    data: Any
-
+    record: Record
     creator_id: int
     prev_hash: str = 0
     timestamp: str = datetime.datetime.utcnow().strftime("%H:%M:%S")
@@ -96,6 +95,7 @@ class Block:
         return sha.hexdigest()
 
 
+# Class for PyChain blockchain.
 @dataclass
 class PyChain:
     chain: List[Block]
@@ -162,40 +162,33 @@ pychain = setup()
 # 2. Add an input area where you can get a value for `sender` from the user.
 # 3. Add an input area where you can get a value for `receiver` from the user.
 # 4. Add an input area where you can get a value for `amount` from the user.
-# 5. As part of the Add Block button functionality, update `new_block` so that `Block` consists of an attribute named `record`, which is set equal to a `Record` that contains the `sender`, `receiver`, and `amount` values. The updated `Block`should also include the attributes for `creator_id` and `prev_hash`.
+# 5. As part of the Add Block button functionality, update `new_block` so that `Block` consists of an attribute named `record`,
+#    which is set equal to a `Record` that contains the `sender`, `receiver`, and `amount` values.
+#    The updated `Block`should also include the attributes for `creator_id` and `prev_hash`.
 
-# @TODO:
-# Delete the `input_data` variable from the Streamlit interface.
-input_data = st.text_input("Block Data")
 
-# @TODO:
-# Add an input area where you can get a value for `sender` from the user.
-# YOUR CODE HERE
+# Get `Record` inputs from user.
+sender = st.text_input("Sender")
+receiver = st.text_input("Receiver")
+amount = st.number_input("Amount")
 
-# @TODO:
-# Add an input area where you can get a value for `receiver` from the user.
-# YOUR CODE HERE
-
-# @TODO:
-# Add an input area where you can get a value for `amount` from the user.
-# YOUR CODE HERE
-
+# Add a block to the blockchain.
 if st.button("Add Block"):
-    prev_block = pychain.chain[-1]
-    prev_block_hash = prev_block.hash_block()
+    if sender != '' and receiver != '':
+        prev_block = pychain.chain[-1]
+        prev_block_hash = prev_block.hash_block()
 
-    # @TODO
-    # Update `new_block` so that `Block` consists of an attribute named `record`
-    # which is set equal to a `Record` that contains the `sender`, `receiver`,
-    # and `amount` values
-    new_block = Block(
-        data=input_data,
-        creator_id=42,
-        prev_hash=prev_block_hash
-    )
+        new_block = Block(
+            record=Record(sender=sender, receiver=receiver, amount=amount),
+            creator_id=42,
+            prev_hash=prev_block_hash
+        )
 
-    pychain.add_block(new_block)
-    st.balloons()
+        pychain.add_block(new_block)
+        st.balloons()
+    else:
+        st.error("Sender and Receiver must not be empty")
+
 
 ################################################################################
 # Streamlit Code (continues)
